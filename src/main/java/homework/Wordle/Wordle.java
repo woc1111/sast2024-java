@@ -83,7 +83,7 @@ public class Wordle {
     }
     public static void main(String[] args) {
         // Read word sets from files
-        WordSet wordSet = new WordSet("C:\\Users\\cnmd\\Desktop\\sast2024-java-main\\assets\\wordle\\FINAL.txt", "C:\\Users\\cnmd\\Desktop\\sast2024-java-main\\assets\\wordle\\ACC.txt");
+        WordSet wordSet = new WordSet("assets/wordle/FINAL.txt", "assets/wordle/ACC.txt");
 
         Scanner input = new Scanner(System.in);
         // Keep asking for an answer if invalid
