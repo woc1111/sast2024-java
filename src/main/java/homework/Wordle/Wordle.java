@@ -10,13 +10,80 @@ public class Wordle {
     // Guess `word` at state `s`
     public static State guess(State s) {
         // TODO begin
+        s.chancesLeft--;
+        int aplhaNum[] = new int[26];
+        for(int i=0;i<26;i++){
+            aplhaNum[i]=0;
+        }
+        for(int i=0;i<5;i++){
+            s.wordState[i]=Color.GRAY;
+        }
+        int basenum = Integer.valueOf('A');
+        for(int i=0;i<5;i++){
+            aplhaNum[Integer.valueOf(s.answer.charAt(i))-basenum]++;
+        }
+        for(int i=0;i<5;i++){
+            if(s.answer.charAt(i) == s.word.charAt(i)){
+                s.wordState[i]=Color.GREEN;
+                aplhaNum[Integer.valueOf(s.answer.charAt(i))-basenum]--;
+            }
+        }
+        for(int i=0;i<5;i++){
+            char right_c = s.answer.charAt(i);
+            char guess_c = s.word.charAt(i);
+            if(s.wordState[i]!=Color.GREEN){
+                if(aplhaNum[Integer.valueOf(guess_c)-basenum] >0 ){
+                    aplhaNum[Integer.valueOf(guess_c)-basenum] --;
+                    s.wordState[i]=Color.YELLOW;
+                }
+                else{
+                    s.wordState[i]=Color.RED;
+                }
+            }
+        }
 
-        // TODO end
+        for(int i=0;i<5;i++){   //更改alphaState
+            char right_c = s.answer.charAt(i);
+            char guess_c = s.word.charAt(i);
+            int right_i = Integer.valueOf(right_c) - basenum;
+            int guess_i = Integer.valueOf(guess_c) - basenum;
+            if(s.wordState[i]==Color.GREEN){
+                s.alphabetState[guess_i]=Color.GREEN;
+            }
+            else if(s.wordState[i]==Color.YELLOW){
+                if(s.alphabetState[guess_i]!=Color.GREEN){
+                    s.alphabetState[guess_i]=Color.YELLOW;
+                }
+            }
+            else if(s.wordState[i]==Color.RED){
+                if(s.alphabetState[guess_i] != Color.GREEN && s.alphabetState[guess_i] != Color.YELLOW){
+                    s.alphabetState[guess_i]=Color.RED;
+                }
+            }
+        }
+        boolean right =true;
+        for(int i=0;i<5;i++){
+            if(s.wordState[i] != Color.GREEN){
+                right =false;
+                break;
+            }
+        }
+        if(right){
+            s.status = GameStatus.WON;
+        }
+        else{
+            if(s.chancesLeft == 0){
+                s.status = GameStatus.LOST;
+            }
+            else{
+                s.status = GameStatus.RUNNING;
+            }
+        }
         return s;
     }
     public static void main(String[] args) {
         // Read word sets from files
-        WordSet wordSet = new WordSet("assets/wordle/FINAL.txt", "assets/wordle/ACC.txt");
+        WordSet wordSet = new WordSet("C:\\Users\\cnmd\\Desktop\\sast2024-java-main\\assets\\wordle\\FINAL.txt", "C:\\Users\\cnmd\\Desktop\\sast2024-java-main\\assets\\wordle\\ACC.txt");
 
         Scanner input = new Scanner(System.in);
         // Keep asking for an answer if invalid
